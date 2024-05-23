@@ -4,6 +4,7 @@ const server = express();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const databaseConnect = require("./config/database");
+const path = require("path");
 const doctorRoute = require("./routes/doctorRoute");
 const authRoute = require("./routes/authRoute");
 const appointmentRoute = require("./routes/appointmentRoute");
@@ -17,7 +18,7 @@ server.use(
     credentials: true,
   })
 );
-
+server.use(express.static(process.env.PUBLIC_DIR));
 server.use(cookieParser());
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
@@ -27,6 +28,10 @@ server.use("/doctor", doctorRoute);
 server.use("/appointment", appointmentRoute);
 server.use("/message", messageRoute);
 server.use("/callback", callbackRoute);
+
+server.use("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "dist", "index.html"));
+});
 
 server.listen(process.env.PORT, () => {
   console.log(`server is running on port ${process.env.PORT}`);
