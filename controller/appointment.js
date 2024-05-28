@@ -11,7 +11,7 @@ const fetchMyAppointments = async (req, res) => {
   try {
     const userAppointments = await Appointment.find({ user: id }).populate({
       path: 'doctor',
-      select: "-email -mobile -experience -rating -fee -gender -age -photo"});
+      select: "-email -mobile -experience -rating -fee -gender -age -photo"}).createdAt(-1);
     res.status(200).json(userAppointments);
   } catch (err) {
     res.status(400).json(err);
