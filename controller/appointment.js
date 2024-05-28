@@ -6,6 +6,18 @@ const {
   cencelledAppointmentTemplate,
 } = require("../services/common");
 
+const fetchMyAppointments = async (req, res) => {
+  const { id } = req.user;
+  try {
+    const userAppointments = await Appointment.find({ user: id }).populate({
+      path: 'doctor',
+      select: "-email -mobile -experience -rating -fee -gender -age -photo"});
+    res.status(200).json(userAppointments);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+};
+
 const createAnAppointment = async (req, res) => {
   const { id } = req.user;
   try {
@@ -59,6 +71,7 @@ const fetchAllAppointments = async (req, res) => {
 };
 
 module.exports = {
+  fetchMyAppointments,
   createAnAppointment,
   updateAppointment,
   fetchAllAppointments,

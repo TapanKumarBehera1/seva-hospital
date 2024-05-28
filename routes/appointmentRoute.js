@@ -1,6 +1,7 @@
 const express = require("express");
 const appointmentRoute = express.Router();
 const {
+  fetchMyAppointments,
   createAnAppointment,
   updateAppointment,
   fetchAllAppointments,
@@ -8,8 +9,9 @@ const {
 const { verifyToken, verifyAdminToken } = require("../middleware/common");
 
 appointmentRoute
-  .get("/",verifyAdminToken, fetchAllAppointments)
-  .post("/",verifyToken, createAnAppointment)
-  .patch("/:id", verifyAdminToken,updateAppointment);
-  
+  .get("/own", verifyToken, fetchMyAppointments)
+  .get("/", verifyAdminToken, fetchAllAppointments)
+  .post("/", verifyToken, createAnAppointment)
+  .patch("/:id", verifyAdminToken, updateAppointment)
+  .patch("/own/:id", verifyToken, updateAppointment);
 module.exports = appointmentRoute;
